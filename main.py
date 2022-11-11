@@ -1,4 +1,3 @@
-input("tekan 0 untuk keluar")
 import os.path
 import openpyxl
 import cv2
@@ -17,16 +16,13 @@ def read_qr_code(filename):
         return "gagal"
 
 
-input("tekan 1 untuk keluar")
 # base_dir = os.path.join(os.environ["HOMEPATH"], "Desktop")
-# base_dir = "../."
-base_dir = "C:/Users/DESK45/Documents"
-if __file__.endswith('.exe'):
-    base_dir = os.path.join(os.path.dirname(__file__), 'foldername')
-    if not os.path.exists(base_dir):
-        os.makedirs(base_dir)
-
-input("tekan 2 untuk keluar")
+base_dir = "."
+# base_dir = "C:/Users/DESK45/Documents"
+# if __file__.endswith('.exe'):
+#     base_dir = os.path.join(os.path.dirname(__file__), 'foldername')
+#     if not os.path.exists(base_dir):
+#         os.makedirs(base_dir)
 disinipdf = (os.path.join(base_dir, "disini_pdf"))
 disinijpg = (os.path.join(base_dir, "disini_image"))
 disinixls = (os.path.join(base_dir, "disini_excel"))
@@ -36,8 +32,6 @@ try:
     os.mkdir(disinixls)
 except:
     print("sudah ada direktori")
-
-input("tekan 3 untuk keluar")
 
 no_page = 0
 isiQR = []
@@ -162,5 +156,3 @@ for qr in isiQR:
                 continue
         worksheet[indeks] = key_data[value]
     wookbook.save(filename=nama_xls)
-
-input("tekan ENTER untuk keluar")
