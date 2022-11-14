@@ -1,5 +1,6 @@
 import os.path
 import openpyxl
+import csv
 import cv2
 import requests
 from pdf2image import convert_from_path
@@ -50,6 +51,7 @@ for filepdf in daftar_input:
 
 print(isiQR)
 no_link = 0
+isi_csv = []
 for qr in isiQR:
     while True:
         try:
@@ -131,11 +133,28 @@ for qr in isiQR:
     for key, value in kols.items():
         worksheet[f'{value}1'] = key
 
+    header_csv = [
+        'FM',
+        'KD_JENIS_TRANSAKSI',
+        'FG_PENGGANTI',
+        'NOMOR_FAKTUR',
+        'MASA_PAJAK',
+        'TAHUN_PAJAK',
+        'TANGGAL_FAKTUR',
+        'NPWP',
+        'NAMA',
+        'ALAMAT_LENGKAP',
+        'JUMLAH_DPP',
+        'JUMLAH_PPN',
+        'JUMLAH_PPNBM',
+        'IS_CREDITABLE',
+    ]
     rows = worksheet.max_row
     rows += 1
     for key, value in fields.items():
         # rows += 1
         breakflag = False
+        entri_csv = []
         indeks = f'{kols[key]}{rows}'
         # try:
         if value == "gabungan":
@@ -156,3 +175,33 @@ for qr in isiQR:
                 continue
         worksheet[indeks] = key_data[value]
     wookbook.save(filename=nama_xls)
+
+    pecahan_tanggal = key_data['tanggalFaktur'].split('/')
+    if key_data['kdJenisTransaksi'] == '07':
+        is_creditable = 0
+    else:
+        is_creditable = 1
+
+    entri_csv.append('FM')
+    entri_csv.append(key_data['kdJenisTransaksi'])
+    entri_csv.append(key_data['fgPengganti'])
+    entri_csv.append(key_data['nomorFaktur'])
+    entri_csv.append(pecahan_tanggal[1])
+    entri_csv.append(pecahan_tanggal[-1])
+    entri_csv.append(key_data['tanggalFaktur'])
+    entri_csv.append(key_data['npwpPenjual'])
+    entri_csv.append(key_data['namaPenjual'])
+    entri_csv.append(key_data['alamatPenjual'])
+    entri_csv.append(key_data['jumlahDpp'])
+    entri_csv.append(key_data['jumlahPpn'])
+    entri_csv.append(key_data['jumlahPpnBm'])
+    entri_csv.append(is_creditable)
+    isi_csv.append(entri_csv)
+
+    print(entri_csv)
+    print(isi_csv)
+
+with open(f'{disinixls}/cek_csv.csv', 'w', encoding='UTF8', newline="") as f:
+    writer = csv.writer(f, delimiter=";")
+    writer.writerow(header_csv)
+    writer.writerows(isi_csv)
