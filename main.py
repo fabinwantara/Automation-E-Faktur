@@ -39,20 +39,27 @@ isiQR = []
 daftar_input = os.listdir(disinipdf)
 print(daftar_input)
 for filepdf in daftar_input:
-    gambarf_pdf = convert_from_path(disinipdf + "/" + filepdf)
+    gambarf_pdf = convert_from_path(disinipdf + "/" + filepdf, dpi=400)
     for i in range(len(gambarf_pdf)):
-        gambarf_pdf[i].save(f'{disinijpg}/page{no_page}.jpg', 'JPEG')
-        link = read_qr_code(f'{disinijpg}/page{no_page}.jpg')
-        if link == '':
-            continue
-        isiQR.append(link)
         no_page += 1
+        gambarf_pdf[i].save(f'{disinijpg}/page{no_page}.jpg', 'JPEG')
+        try:
+            link = read_qr_code(f'{disinijpg}/page{no_page}.jpg')
+            if link == '':
+                isiQR.append('')
+                continue
+            isiQR.append(link)
+        except:
+            continue
 
 
 print(isiQR)
 no_link = 0
 isi_csv = []
 for qr in isiQR:
+    no_link += 1
+    if qr == '':
+        continue
     while True:
         try:
             resp = requests.get(qr, timeout=1)
@@ -70,7 +77,7 @@ for qr in isiQR:
     nama_xml = f'{disinijpg}/link{no_link}.xml'
     with open(nama_xml, 'wb') as f:
         f.write(resp.content)
-        no_link += 1
+        # no_link += 1
 
     tree = eTree.parse(nama_xml)
     root = tree.getroot()
