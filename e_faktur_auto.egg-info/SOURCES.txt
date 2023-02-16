@@ -1,0 +1,7 @@
+coba.py
+main.py
+setup.py
+e_faktur_auto.egg-info/PKG-INFO
+e_faktur_auto.egg-info/SOURCES.txt
+e_faktur_auto.egg-info/dependency_links.txt
+e_faktur_auto.egg-info/top_level.txt
